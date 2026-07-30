@@ -1,0 +1,6 @@
+{
+  "name": "EduAI School",
+  "description": "Platform AI terintegrasi untuk guru Indonesia: perencanaan pembelajaran Kurikulum Merdeka, modul ajar, LKPD, soal, analisis nilai, administrasi, dan workflow AI otomatis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
