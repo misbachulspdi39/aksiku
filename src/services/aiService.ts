@@ -1,6 +1,9 @@
 import { ChatMessage, WorkflowResult } from '../types';
 import { EDU_SYSTEM_PROMPT } from '../prompts';
-
+const API_BASE =
+  import.meta.env.VITE_API_URL || 'https://aksiku-production.up.railway.app';
+const API_BASE =
+  import.meta.env.VITE_API_URL || 'http://localhost:3000';
 export async function generateAiContent(params: {
   prompt: string;
   systemInstruction?: string;
