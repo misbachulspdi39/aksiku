@@ -9,7 +9,7 @@ export async function generateAiContent(params: {
   mimeType?: string;
 }): Promise<{ text: string; json?: any }> {
   try {
-    const res = await fetch('/api/gemini/generate', {
+    const res = await fetch(`${API_BASE}/api/gemini/generate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export async function sendAiChatMessage(
   systemInstruction?: string
 ): Promise<string> {
   try {
-    const res = await fetch('/api/gemini/chat', {
+   const res = await fetch(`${API_BASE}/api/gemini/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export async function runBatchSuperWorkflow(params: {
   mimeType?: string;
 }): Promise<WorkflowResult> {
   try {
-    const res = await fetch('/api/gemini/workflow', {
+    const res = await fetch(`${API_BASE}/api/gemini/workflow`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
