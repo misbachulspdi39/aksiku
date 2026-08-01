@@ -1,5 +1,5 @@
 import express from 'express';
-import path from 'path';
+import cors from 'cors';
 import path from 'path';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
@@ -10,6 +10,7 @@ console.log("GEMINI =", process.env.GEMINI_API_KEY);
 const __dirname = process.cwd();
 
 const app = express();
+app.use(cors());
 const PORT = Number(process.env.PORT) || 3000;
 
 // Increase payload limit for PDF/File base64 uploads
