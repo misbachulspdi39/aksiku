@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import path from 'path';
+import cors from 'cors';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
