@@ -12,11 +12,21 @@ jobs:
     steps:
       - name: Ping Supabase REST API
         run: |
-          # Ambil URL dari secret dan hapus garis miring di akhir (jika ada)
           URL="${{ secrets.SUPABASE_URL }}"
           URL="${URL%/}"
           
-          # Eksekusi curl dengan proteksi header API key & Authorization
-          curl -i -f -X GET "$URL/rest/v1/" \
+          # Kirim request dan tampilkan HTTP Status Code saja
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/rest/v1/" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          
+          echo "Supabase Response Status Code: $HTTP_STATUS"
+          
+          # Jika mendapat kode 200, 204, atau 401/404, artinya server Supabase menyala dan merespon
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 500 ]; then
+            echo "Supabase successfully pinged and alive!"
+            exit 0
+          else
+            echo "Supabase returned server error $HTTP_STATUS"
+            exit 1
+          fi
