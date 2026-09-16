@@ -16,7 +16,7 @@ import {
   Map,
   Users,
   LogOut,
-  Sparkles
+  Heart
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -32,7 +32,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentUser,
   onLogout
 }) => {
-  // Seluruh daftar menu LENGKAP tanpa ada yang dipotong
   const menuGroups = [
     ...(currentUser?.role === 'admin'
       ? [
@@ -80,20 +79,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-68 bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col h-screen sticky top-0 select-none shadow-xl shrink-0 font-sans">
+    <aside className="w-68 bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col h-screen sticky top-0 select-none shadow-xl shrink-0 font-sans justify-between">
       
       {/* Header Brand */}
       <div className="p-4 border-b border-slate-800/80 bg-slate-950/40 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
-            <Sparkles className="w-5 h-5 text-white" />
+        <div className="flex items-start gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-black text-white text-lg shadow-md shadow-blue-500/20 shrink-0">
+            A
           </div>
           <div>
-            <h1 className="font-black text-lg text-white tracking-wide leading-none">
-              EduAI School
+            <h1 className="font-black text-xs text-white leading-snug tracking-wide uppercase">
+              AKSIKU : Aplikasi Kreatif dan Asisten Kecerdasan Artifisial untuk Guru
             </h1>
             <p className="text-[10px] font-extrabold text-blue-400 mt-1 tracking-wider uppercase">
-              AKSIKU • Kurikulum Merdeka
+              KREATIF DAN EFISIEN BERKARYA
             </p>
           </div>
         </div>
@@ -153,26 +152,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ))}
       </nav>
 
-      {/* User Info & Logout (jika ada) */}
-      {currentUser && (
-        <div className="p-3 border-t border-slate-800 bg-slate-950/40 shrink-0">
-          <div className="flex items-center justify-between p-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
-            <div className="min-w-0 pr-2">
-              <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
-              <p className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider">{currentUser.role}</p>
+      {/* Bagian Bawah: User Info & Footer Credit */}
+      <div className="shrink-0 border-t border-slate-800 bg-slate-950/40">
+        {currentUser && (
+          <div className="p-3 pb-2">
+            <div className="flex items-center justify-between p-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
+              <div className="min-w-0 pr-2">
+                <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
+                <p className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider">{currentUser.role}</p>
+              </div>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  title="Keluar / Logout"
+                  className="p-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition shrink-0"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              )}
             </div>
-            {onLogout && (
-              <button
-                onClick={onLogout}
-                title="Keluar / Logout"
-                className="p-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition shrink-0"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            )}
           </div>
+        )}
+
+        {/* Credit Developer */}
+        <div className="p-3 pt-1 text-center border-t border-slate-800/50">
+          <p className="text-[10px] text-slate-400 font-medium flex items-center justify-center gap-1 leading-tight">
+            <span>Didevelop dengan</span>
+            <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+            <span>oleh :</span>
+          </p>
+          <p className="text-xs font-bold text-slate-200 mt-0.5">
+            Misbachul Munir PP
+          </p>
         </div>
-      )}
+      </div>
     </aside>
   );
 };
