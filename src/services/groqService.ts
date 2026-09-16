@@ -8,7 +8,7 @@ export type MenuType = 'modul' | 'rpp' | 'soal' | 'workflow' | 'lkpd' | 'ppt';
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
 
 // MODEL RESMI GROQ YANG AKTIF & STABIL
-const GROQ_MODEL = "llama-3.1-8b-instant"; 
+const GROQ_MODEL = "openai/gpt-oss-20b"; 
 
 const DEFAULT_SYSTEM_INSTRUCTION = 
   "Anda adalah Pakar Konsultan Pendidikan dan Penyusun Dokumen Kurikulum Merdeka Terbaik di Indonesia. " +
