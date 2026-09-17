@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SavedDocument, UserProfile } from './types';
 
 // Import Halaman Utama & Fitur
@@ -70,7 +70,24 @@ export default function App() {
 
   const [currentPage, setCurrentPage] = useState<ActivePage>('dashboard');
   const [savedDocs, setSavedDocs] = useState<SavedDocument[]>([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State untuk Toggle Sidebar Mobile
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State Toggle Sidebar Mobile
+
+  // LOGIC TOMBOL BACK HP: Hanya menutup sidebar jika terbuka, bukan keluar aplikasi
+  useEffect(() => {
+    if (isSidebarOpen) {
+      window.history.pushState({ sidebarOpen: true }, '');
+
+      const handlePopState = () => {
+        setIsSidebarOpen(false);
+      };
+
+      window.addEventListener('popstate', handlePopState);
+
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [isSidebarOpen]);
 
   // Handler Login
   const handleLoginSuccess = (user: UserProfile) => {
