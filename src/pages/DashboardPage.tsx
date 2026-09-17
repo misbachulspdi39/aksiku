@@ -37,7 +37,7 @@ export const DashboardPage: React.FC = () => {
         <div className="relative z-10 space-y-4 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-blue-200 text-xs font-extrabold uppercase tracking-widest">
             <Sparkles className="w-4 h-4 text-blue-400" />
-            <span>AKSIKU — Aplikasi Administrasi Guru Esaku</span>
+            <span>AKSIKU — Aplikasi Administrasi Guru</span>
           </div>
           
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight text-white">
@@ -45,7 +45,7 @@ export const DashboardPage: React.FC = () => {
           </h1>
           
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-medium pt-1">
-            Platform Asisten Kurikulum Merdeka Terintegrasi dengan Grok AI. Buat Modul Ajar, RPP, LKPD, Bank Soal, hingga Analisis Rapor secara otomatis dan berkualitas tinggi.
+            Platform Asisten Kurikulum Merdeka Terintegrasi dengan AI. Buat Modul Ajar, RPP, LKPD, Bank Soal, hingga Analisis Rapor secara otomatis dan berkualitas tinggi.
           </p>
         </div>
       </div>

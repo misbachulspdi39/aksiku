@@ -39,7 +39,10 @@ import {
   GraduationCap,
   Users,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  Heart,
+  Menu,
+  X
 } from 'lucide-react';
 
 type ActivePage =
@@ -67,12 +70,12 @@ export default function App() {
 
   const [currentPage, setCurrentPage] = useState<ActivePage>('dashboard');
   const [savedDocs, setSavedDocs] = useState<SavedDocument[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State untuk Toggle Sidebar Mobile
 
   // Handler Login
   const handleLoginSuccess = (user: UserProfile) => {
     setCurrentUser(user);
     localStorage.setItem('eduai_user_session', JSON.stringify(user));
-    // Jika login sebagai admin, langsung arahkan ke Manajemen Pengguna
     if (user.role === 'admin') {
       setCurrentPage('admin_users');
     } else {
@@ -167,30 +170,55 @@ export default function App() {
   ];
 
   return (
-    <div className="flex h-screen bg-slate-50 font-sans text-slate-800 overflow-hidden">
+    <div className="flex h-screen bg-slate-50 font-sans text-slate-800 overflow-hidden relative">
+      
+      {/* BACKDROP OVERLAY UNTUK MOBILE */}
+      {isSidebarOpen && (
+        <div 
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 md:hidden transition-opacity"
+        />
+      )}
+
       {/* SIDEBAR NAVIGATION */}
-      <aside className="w-64 bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col justify-between shrink-0 h-screen sticky top-0 shadow-xl">
+      <aside className={`
+        fixed md:static inset-y-0 left-0 z-50
+        w-[290px] sm:w-[320px] bg-slate-900 text-slate-300 border-r border-slate-800 
+        flex flex-col justify-between shrink-0 h-screen shadow-2xl md:shadow-xl
+        transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
         
         {/* Bagian Atas: Logo & Menu */}
         <div className="flex-1 min-h-0 flex flex-col">
-          {/* Logo Brand */}
-          <div className="p-4 border-b border-slate-800 bg-slate-950/40 shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-black text-white text-base shadow-md shadow-blue-500/20">
+          
+          {/* Logo Brand & Judul Header */}
+          <div className="p-4 border-b border-slate-800 bg-slate-950/40 shrink-0 relative">
+            
+            {/* Tombol Tutup Sidebar untuk Tampilan HP */}
+            <button 
+              onClick={() => setIsSidebarOpen(false)}
+              className="md:hidden absolute top-3 right-3 p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-start gap-3 pr-6 md:pr-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-black text-white text-xl shadow-md shadow-blue-500/20 shrink-0 mt-0.5">
                 A
               </div>
-              <div>
-                <h1 className="font-extrabold text-white text-sm tracking-wide leading-none">
-                  EduAI School
+              <div className="min-w-0 flex-1">
+                <h1 className="font-extrabold text-xs sm:text-sm md:text-base text-white leading-tight tracking-wide">
+                  AKSIKU : Aplikasi Kreatif dan Asisten Kecerdasan Artifisial untuk Guru
                 </h1>
-                <p className="text-[10px] text-blue-400 font-bold mt-1 tracking-wider uppercase">
-                  AKSIKU • Kurikulum Merdeka
+                <p className="text-[10px] sm:text-xs text-blue-400 font-extrabold mt-1.5 tracking-wider uppercase">
+                  KREATIF DAN EFISIEN BERKARYA
                 </p>
               </div>
             </div>
 
-            <div className="mt-3 flex items-center">
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold bg-blue-950/80 text-blue-300 border border-blue-800/60 px-2.5 py-0.5 rounded-full shadow-inner">
+            <div className="mt-3.5 flex items-center">
+              <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-semibold bg-blue-950/80 text-blue-300 border border-blue-800/60 px-3 py-1 rounded-full shadow-inner">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 Edisi SLB & Inklusi
               </span>
@@ -210,7 +238,10 @@ export default function App() {
                   return (
                     <button
                       key={item.id}
-                      onClick={() => setCurrentPage(item.id as ActivePage)}
+                      onClick={() => {
+                        setCurrentPage(item.id as ActivePage);
+                        setIsSidebarOpen(false); // Otomatis tutup sidebar di mobile saat memilih menu
+                      }}
                       className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group ${
                         isActive
                           ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/30 font-bold'
@@ -236,22 +267,36 @@ export default function App() {
           </div>
         </div>
 
-        {/* Bagian Bawah: Info User & Tombol LOGOUT */}
-        <div className="p-3 border-t border-slate-800 bg-slate-950/40 shrink-0">
-          <div className="flex items-center justify-between p-2.5 bg-slate-800/60 rounded-xl border border-slate-700/50 shadow-sm">
-            <div className="min-w-0 pr-2">
-              <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
-              <p className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider">{currentUser.role}</p>
+        {/* Bagian Bawah: Info User, Logout, & Footer Credit */}
+        <div className="border-t border-slate-800 bg-slate-950/40 shrink-0">
+          <div className="p-3 pb-2">
+            <div className="flex items-center justify-between p-2.5 bg-slate-800/60 rounded-xl border border-slate-700/50 shadow-sm">
+              <div className="min-w-0 pr-2">
+                <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
+                <p className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider">{currentUser.role}</p>
+              </div>
+              
+              <button
+                onClick={handleLogout}
+                title="Keluar / Logout"
+                className="flex items-center gap-1 px-2.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold text-xs rounded-lg transition shrink-0"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Keluar</span>
+              </button>
             </div>
-            
-            <button
-              onClick={handleLogout}
-              title="Keluar / Logout"
-              className="flex items-center gap-1 px-2.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold text-xs rounded-lg transition shrink-0"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Keluar</span>
-            </button>
+          </div>
+
+          {/* Credit Developer */}
+          <div className="p-3 pt-1 text-center border-t border-slate-800/50">
+            <p className="text-[10px] text-slate-400 font-medium flex items-center justify-center gap-1 leading-tight">
+              <span>Didevelop dengan</span>
+              <Heart className="w-3 h-3 text-rose-500 fill-rose-500 inline" />
+              <span>oleh :</span>
+            </p>
+            <p className="text-xs font-bold text-slate-200 mt-0.5">
+              Misbachul Munir PP
+            </p>
           </div>
         </div>
 
@@ -260,31 +305,50 @@ export default function App() {
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* TOP HEADER NAVBAR */}
-        <header className="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 shadow-sm">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Lisensi Aktif</span>
-          </div>
-
+        <header className="h-14 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between shrink-0 shadow-sm">
+          
+          {/* Tombol Hamburger (HP) + Indicator Lisensi */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setCurrentPage('workflow')}
-              className="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-md shadow-blue-500/20 transition"
+              onClick={() => setIsSidebarOpen(true)}
+              className="md:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+              title="Buka Menu"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Workflow AI 10-in-1</span>
+              <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-1.5 bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="hidden sm:inline">Lisensi Aktif</span>
+            </div>
+          </div>
+
+          {/* Akses Cepat + Profil Topbar */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => {
+                setCurrentPage('workflow');
+                setIsSidebarOpen(false);
+              }}
+              className="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-md shadow-blue-500/20 transition"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Workflow AI 10-in-1</span>
+              <span className="sm:hidden">Workflow</span>
+            </button>
+
+            <div className="flex items-center gap-1.5 bg-slate-100 text-slate-700 text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200">
               {currentUser.role === 'admin' ? (
                 <>
                   <ShieldCheck className="w-4 h-4 text-purple-600" />
-                  <span>Administrator</span>
+                  <span className="hidden sm:inline">Administrator</span>
                 </>
               ) : (
                 <>
                   <GraduationCap className="w-4 h-4 text-indigo-600" />
-                  <span>{currentUser.schoolName || 'Guru Mata Pelajaran'}</span>
+                  <span className="truncate max-w-[100px] sm:max-w-none">
+                    {currentUser.schoolName || 'Guru'}
+                  </span>
                 </>
               )}
             </div>
